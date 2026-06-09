@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: gotlr_db_container
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-gotlr_db}
+      POSTGRES_USER: ${POSTGRES_USER:-gotlr_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gotlr_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-gotlr_user} -d ${POSTGRES_DB:-gotlr_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  django_backend:
+    build:
+      context: ./backend/django_app
+    container_name: gotlr_django_backend
+    restart: always
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+    depends_on:
+      db:
+        condition: service_healthy
+
+  fastapi_backend:
+    build:
+      context: ./backend/fastapi_app
+    container_name: gotlr_fastapi_backend
+    restart: always
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - STORAGE_DIR=/app/storage_data
+    volumes:
+      - storage_data:/app/storage_data
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: gotlr_frontend
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - django_backend
+      - fastapi_backend
+
+volumes:
+  postgres_data:
+  storage_data:

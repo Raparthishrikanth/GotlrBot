@@ -9,7 +9,7 @@ services:
     name: gotlr-django-backend
     env: docker
     dockerContext: ./backend/django_app
-    dockerfilePath: Dockerfile.prod
+    dockerfilePath: ./backend/django_app/Dockerfile.prod
     plan: free
     envVars:
       - key: POSTGRES_DB
@@ -43,7 +43,7 @@ services:
     name: gotlr-fastapi-backend
     env: docker
     dockerContext: ./backend/fastapi_app
-    dockerfilePath: Dockerfile.prod
+    dockerfilePath: ./backend/fastapi_app/Dockerfile.prod
     plan: free
     envVars:
       - key: POSTGRES_DB

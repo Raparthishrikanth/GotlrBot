@@ -24,4 +24,4 @@ COPY . /app/
 EXPOSE 8001
 
 # Serve via Uvicorn with multiple workers for concurrency in production
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001", "--workers", "4"]
+CMD ["sh", "-c", "python wait_for_db.py && uvicorn main:app --host 0.0.0.0 --port 8001 --workers 4"]

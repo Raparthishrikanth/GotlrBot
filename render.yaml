@@ -15,7 +15,7 @@ services:
       - key: POSTGRES_DB
         fromDatabase:
           name: gotlr-db-prod
-          property: databaseName
+          property: database
       - key: POSTGRES_USER
         fromDatabase:
           name: gotlr-db-prod
@@ -49,7 +49,7 @@ services:
       - key: POSTGRES_DB
         fromDatabase:
           name: gotlr-db-prod
-          property: databaseName
+          property: database
       - key: POSTGRES_USER
         fromDatabase:
           name: gotlr-db-prod

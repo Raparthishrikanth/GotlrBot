@@ -69,9 +69,32 @@ TEMPLATES = [
 WSGI_APPLICATION = 'django_project.wsgi.application'
 
 # Database
-# If POSTGRES_DB is provided, use PostgreSQL, otherwise fallback to SQLite for local development
+# Support direct connection string via DATABASE_URL or individual variables
+import urllib.parse as urlparse
+
+db_url = os.getenv('DATABASE_URL')
 db_name = os.getenv('POSTGRES_DB')
-if db_name:
+
+if db_url:
+    # Handle postgresql:// and postgres:// connection strings
+    url = urlparse.urlparse(db_url)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': url.path[1:],
+            'USER': url.username,
+            'PASSWORD': url.password,
+            'HOST': url.hostname,
+            'PORT': url.port or 5432,
+        }
+    }
+    # Parse query parameters (e.g. sslmode=require)
+    query = urlparse.parse_qs(url.query)
+    if 'sslmode' in query:
+        DATABASES['default']['OPTIONS'] = {
+            'sslmode': query['sslmode'][0]
+        }
+elif db_name:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',

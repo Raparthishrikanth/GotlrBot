@@ -17,9 +17,13 @@ SECRET_KEY = os.getenv('FASTAPI_SECRET_KEY', 'django-insecure-some-very-secret-a
 ALGORITHM = "HS256"
 
 # Database Configuration
-# Fallback to sqlite if POSTGRES_DB is not defined
+# Direct connection string via DATABASE_URL or build it using individual fields
+db_url = os.getenv('DATABASE_URL')
 db_name = os.getenv('POSTGRES_DB')
-if db_name:
+
+if db_url:
+    DATABASE_URL = db_url
+elif db_name:
     DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER', 'gotlr_user')}:{os.getenv('POSTGRES_PASSWORD', 'gotlr_password')}@{os.getenv('POSTGRES_HOST', 'db')}:{os.getenv('POSTGRES_PORT', '5432')}/{db_name}"
 else:
     # Use the same sqlite database file as Django if local

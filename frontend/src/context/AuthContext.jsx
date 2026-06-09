@@ -4,8 +4,8 @@ import axios from 'axios';
 const AuthContext = createContext(null);
 
 // Configure backend URLs
-export const DJANGO_API_URL = 'http://localhost:8000/api';
-export const FASTAPI_API_URL = 'http://localhost:8001';
+export const DJANGO_API_URL = import.meta.env.VITE_DJANGO_API_URL || 'http://localhost:8000/api';
+export const FASTAPI_API_URL = import.meta.env.VITE_FASTAPI_API_URL || 'http://localhost:8001';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

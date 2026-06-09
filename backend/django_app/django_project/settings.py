@@ -147,5 +147,10 @@ SIMPLE_JWT = {
 }
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True  # Enable for ease of deployment, restrict in prod
+cors_allowed = os.getenv('CORS_ALLOWED_ORIGINS')
+if cors_allowed:
+    CORS_ALLOWED_ORIGINS = cors_allowed.split(',')
+    CORS_ALLOW_ALL_ORIGINS = False
+else:
+    CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True

@@ -60,6 +60,28 @@ Open your browser and navigate to:
 
 ---
 
+## 🚢 Production Deployment
+
+For deploying the platform to a production environment (such as an AWS EC2 instance, DigitalOcean Droplet, VPS, etc.), you can run the production-optimized container grid:
+
+### 1. Build and Run Production Containers
+```bash
+docker-compose -f docker-compose.prod.yml up --build -d
+```
+This builds and launches:
+- **Nginx Web Server (Frontend)**: Serves the static compiled React production build on port `80` with proper client-side SPA routing (rewriting unmatched requests to `index.html`).
+- **Gunicorn WSGI Server (Django)**: Runs Django on port `8000` via Gunicorn rather than the development server.
+- **FastAPI AI Server**: Runs FastAPI on port `8001` with multiple Uvicorn workers enabled.
+- **PostgreSQL Database**: Configured on port `5432` with volume persistence.
+
+### 2. Overriding Backend URLs
+If your frontend needs to talk to APIs on external domain names (e.g. `https://api.gotlrbot.com` instead of localhost), you can pass build arguments to Docker:
+```bash
+VITE_DJANGO_API_URL=https://django-api.domain.com/api VITE_FASTAPI_API_URL=https://fastapi-api.domain.com docker-compose -f docker-compose.prod.yml up --build -d
+```
+
+---
+
 ## 🛠️ Running Locally (Without Docker)
 
 If you prefer to run services outside of Docker containers:

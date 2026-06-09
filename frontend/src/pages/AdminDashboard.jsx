@@ -313,7 +313,7 @@ export default function AdminDashboard() {
               <h4 className="font-bold text-white text-sm">System Administration Overview</h4>
               <p className="text-xs text-slate-400 leading-relaxed mt-1">
                 Both Django and FastAPI services are executing endpoints mapped to standard database structures. 
-                For advanced features (such as configuring mail transfer credentials or API host configurations), please use the native <a href="http://localhost:8000/admin/" target="_blank" rel="noreferrer" className="text-sky-400 hover:underline">Django Admin Console Panel</a> directly.
+                For advanced features (such as configuring mail transfer credentials or API host configurations), please use the native <a href={DJANGO_API_URL.replace(/\/api$/, '') + '/admin/'} target="_blank" rel="noreferrer" className="text-sky-400 hover:underline">Django Admin Console Panel</a> directly.
               </p>
             </div>
           </div>

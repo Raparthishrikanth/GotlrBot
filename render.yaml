@@ -1,0 +1,80 @@
+databases:
+  - name: gotlr-db-prod
+    databaseName: gotlr_db
+    user: gotlr_user
+    plan: free
+
+services:
+  - type: web
+    name: gotlr-django-backend
+    env: docker
+    dockerContext: ./backend/django_app
+    dockerfilePath: Dockerfile.prod
+    plan: free
+    envVars:
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: gotlr-db-prod
+          property: databaseName
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: gotlr-db-prod
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: gotlr-db-prod
+          property: password
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: gotlr-db-prod
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: gotlr-db-prod
+          property: port
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "gotlr-django-backend.onrender.com,localhost,127.0.0.1"
+
+  - type: web
+    name: gotlr-fastapi-backend
+    env: docker
+    dockerContext: ./backend/fastapi_app
+    dockerfilePath: Dockerfile.prod
+    plan: free
+    envVars:
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: gotlr-db-prod
+          property: databaseName
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: gotlr-db-prod
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: gotlr-db-prod
+          property: password
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: gotlr-db-prod
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: gotlr-db-prod
+          property: port
+      - key: FASTAPI_SECRET_KEY
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: EMBEDDING_MODEL_NAME
+        value: all-MiniLM-L6-v2
+      - key: STORAGE_DIR
+        value: /app/storage_data

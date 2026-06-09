@@ -80,6 +80,15 @@ If your frontend needs to talk to APIs on external domain names (e.g. `https://a
 VITE_DJANGO_API_URL=https://django-api.domain.com/api VITE_FASTAPI_API_URL=https://fastapi-api.domain.com docker-compose -f docker-compose.prod.yml up --build -d
 ```
 
+### 3. One-Click Cloud Deployment via Render Blueprint
+To deploy your PostgreSQL database, Django backend, and FastAPI backend to Render's free tier:
+1. Log in to your **[Render Dashboard](https://dashboard.render.com/)**.
+2. Go to **Blueprints** and click **New Blueprint Instance**.
+3. Select your connected GitHub repository (`GotlrBot`).
+4. Render will read the `render.yaml` file and automatically configure your PostgreSQL database, Django backend, and FastAPI backend.
+5. Once deployed, add your `GEMINI_API_KEY` to the FastAPI service variables in the Render Dashboard.
+6. Copy the newly generated Render URLs for both Django and FastAPI and configure them in your **Vercel** frontend environment settings (`VITE_DJANGO_API_URL` and `VITE_FASTAPI_API_URL`).
+
 ---
 
 ## 🛠️ Running Locally (Without Docker)

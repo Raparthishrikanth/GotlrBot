@@ -21,7 +21,10 @@ RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTr
 
 COPY . /app/
 
+ENV OMP_NUM_THREADS=1
+ENV MKL_NUM_THREADS=1
+
 EXPOSE 8001
 
-# Serve via Uvicorn with multiple workers for concurrency in production
-CMD ["sh", "-c", "python wait_for_db.py && uvicorn main:app --host 0.0.0.0 --port 8001 --workers 4"]
+# Serve via Uvicorn (single worker to fit in Render 512MB RAM free tier limit)
+CMD ["sh", "-c", "python wait_for_db.py && uvicorn main:app --host 0.0.0.0 --port 8001"]
